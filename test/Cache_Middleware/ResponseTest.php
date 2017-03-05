@@ -26,7 +26,7 @@ class Cache_Api_ResponseTest extends TestCase
         // empty view
         $request->view = array();
         
-        $middleware->process_response($request, $response);
+        $response = $middleware->process_response($request, $response);
         $this->assertTrue(array_key_exists('Cache-Control', $response->headers),
                 '\'Cache-Control\' not found in the header.');
         $this->assertTrue(
