@@ -260,11 +260,11 @@ class Cache_Api_ResponseTest extends TestCase
                          false, 
                         'The \'no-cache\' phrase exist in header \'Cache-Control\'.');
         $this->assertTrue(
-                strrpos($response->headers['Cache-Control'], 'private') !==
-                         false, 
-                        'The \'private\' phrase not exist in header \'Cache-Control\'.');
+                strrpos($response->headers['Cache-Control'], 'private') ===
+                         false,
+                        'The \'private\' phrase exist in header \'Cache-Control\'.');
         $this->assertTrue(
-                strrpos($response->headers['Cache-Control'], 'public') ===
+                strrpos($response->headers['Cache-Control'], 'public') !==
                          false, 
                         'The \'public\' phrase exist in header \'Cache-Control\'.');
     }
