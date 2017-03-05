@@ -47,9 +47,12 @@ class Cache_Middleware_RFC7234
     {
         // Request with If-None-Match header
         if($request->method === 'GET' && array_key_exists('If-None-Match', $request->HEADERS)){
+            $resETag = array_key_exists('ETag', $response->headers) ? $response->headers['ETag'] : null;
+            if($resETag === null)
+                return $response;
             $matches = $request->HEADERS['If-None-Match'];
             if(!is_array($matches)){
-                $stamp = [$matches];
+                $matches = array($matches);
             }
             foreach($matches as $stamp){                
                 if(strcmp($stamp, $response->headers['ETag']) === 0){
