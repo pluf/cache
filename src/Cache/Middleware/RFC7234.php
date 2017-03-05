@@ -1,6 +1,25 @@
 <?php
+/*
+ * This file is part of Pluf Framework, a simple PHP Application Framework.
+ * Copyright (C) 2010-2020 Phoinex Scholars Co. http://dpq.co.ir
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 /**
+ * Cache middleware
+ * 
  * Add necessary directives to header of response to cache response in client side.
  * Added directives to header of response in this middleware are based on RFC-7234.
  *
@@ -43,10 +62,10 @@ class Cache_Middleware_RFC7234
         }
         
         $view = $request->view;
-        $cacheable = array_key_exists('cacheable', $view) ? $view->cacheable : false;
-        $revalidate = array_key_exists('revalidate', $view) ? $view->revalidate : false;
-        $intermediate_cache = array_key_exists('revalidate', $view) ? $view->intermediate_cache : true;
-        $max_age = array_key_exists('max_age', $view) ? $view->max_age : 604800;
+        $cacheable = array_key_exists('cacheable', $view['ctrl']) ? $view['ctrl']['cacheable'] : false;
+        $revalidate = array_key_exists('revalidate', $view['ctrl']) ? $view['ctrl']['revalidate'] : false;
+        $intermediate_cache = array_key_exists('intermediate_cache', $view['ctrl']) ? $view['ctrl']['intermediate_cache'] : true;
+        $max_age = array_key_exists('max_age', $view['ctrl']) ? $view['ctrl']['max_age'] : 604800;
         $etag = method_exists($response, 'etag') ? $response->etag() : null;
         
         //TODO: hadi, 1395: check if values in Cache-Controll should be separated by , or ;
