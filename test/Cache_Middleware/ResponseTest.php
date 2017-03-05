@@ -20,6 +20,23 @@ use PHPUnit\Framework\TestCase;
 require_once 'Pluf.php';
 
 /**
+ * Response test class
+ */
+class CacheTestHttpResponse extends Pluf_HTTP_Response
+{
+
+    function __construct ($content = '', $mimetype = null)
+    {
+        parent::__construct($content, $mimetype);
+    }
+
+    public function etag ()
+    {
+        return 'test';
+    }
+}
+
+/**
  * Check middleware api
  *
  * @author pluf.ir<info@pluf.ir>
@@ -129,7 +146,7 @@ class Cache_Api_ResponseTest extends TestCase
                          false, 
                         'The \'no-store\' phrase not in header \'Cache-Control\'.');
     }
-    
+
     /**
      * @test
      */
@@ -168,14 +185,13 @@ class Cache_Api_ResponseTest extends TestCase
                          false, 
                         'The \'no-cache\' phrase not exist in header \'Cache-Control\'.');
         $this->assertTrue(
-                strrpos($response->headers['Cache-Control'], 'private') !==
-                         false, 
-                        'The \'private\' phrase not exist in header \'Cache-Control\'.');
+                strrpos($response->headers['Cache-Control'], 'private') !== false, 
+                'The \'private\' phrase not exist in header \'Cache-Control\'.');
         $this->assertTrue(
-                strrpos($response->headers['Cache-Control'], 'public') ===
-                         false, 
-                        'The \'public\' phrase exist in header \'Cache-Control\'.');
+                strrpos($response->headers['Cache-Control'], 'public') === false, 
+                'The \'public\' phrase exist in header \'Cache-Control\'.');
     }
+
     /**
      * @test
      */
@@ -214,14 +230,13 @@ class Cache_Api_ResponseTest extends TestCase
                          false, 
                         'The \'no-cache\' phrase exist in header \'Cache-Control\'.');
         $this->assertTrue(
-                strrpos($response->headers['Cache-Control'], 'private') !==
-                         false, 
-                        'The \'private\' phrase not exist in header \'Cache-Control\'.');
+                strrpos($response->headers['Cache-Control'], 'private') !== false, 
+                'The \'private\' phrase not exist in header \'Cache-Control\'.');
         $this->assertTrue(
-                strrpos($response->headers['Cache-Control'], 'public') ===
-                         false, 
-                        'The \'public\' phrase exist in header \'Cache-Control\'.');
+                strrpos($response->headers['Cache-Control'], 'public') === false, 
+                'The \'public\' phrase exist in header \'Cache-Control\'.');
     }
+
     /**
      * @test
      */
@@ -260,12 +275,42 @@ class Cache_Api_ResponseTest extends TestCase
                          false, 
                         'The \'no-cache\' phrase exist in header \'Cache-Control\'.');
         $this->assertTrue(
-                strrpos($response->headers['Cache-Control'], 'private') ===
-                         false,
-                        'The \'private\' phrase exist in header \'Cache-Control\'.');
+                strrpos($response->headers['Cache-Control'], 'private') === false, 
+                'The \'private\' phrase exist in header \'Cache-Control\'.');
         $this->assertTrue(
-                strrpos($response->headers['Cache-Control'], 'public') !==
-                         false, 
-                        'The \'public\' phrase exist in header \'Cache-Control\'.');
+                strrpos($response->headers['Cache-Control'], 'public') !== false, 
+                'The \'public\' phrase exist in header \'Cache-Control\'.');
+    }
+
+    /**
+     * @test
+     */
+    public function etagTest ()
+    {
+        $query = '/example/resource';
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+        $_SERVER['REQUEST_URI'] = 'http://localhost/example/resource';
+        $_SERVER['REMOTE_ADDR'] = 'not set';
+        $_SERVER['HTTP_HOST'] = 'localhost';
+        $GLOBALS['_PX_uniqid'] = 'example';
+        
+        $middleware = new Cache_Middleware_RFC7234();
+        $request = new Pluf_HTTP_Request($query);
+        $response = new CacheTestHttpResponse('hi!');
+        
+        // empty view
+        $request->view = array(
+                'ctrl' => array(
+                        'cacheable' => true,
+                        'revalidate' => false,
+                        'intermediate_cache' => true,
+                        'max_age' => 100
+                )
+        );
+        $request->HEADERS['If-None-Match'] = $response->etag();
+        
+        $response = $middleware->process_response($request, $response);
+        $this->assertTrue(304 === $response->status_code, 
+                'Status code is not 304');
     }
 }
