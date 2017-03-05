@@ -29,7 +29,7 @@ class Cache_Middleware_RFC7234
         $view = $request->view;
         $cacheable = array_key_exists('cacheable', $view) ? $view->cacheable : false;
         $revalidate = array_key_exists('revalidate', $view) ? $view->revalidate : false;
-        $intermediate_cache = array_key_exists('revalidate', $view) ? $view->intermediate_cache : false;
+        $intermediate_cache = array_key_exists('revalidate', $view) ? $view->intermediate_cache : true;
         // default max_age: 7 day
         $max_age = array_key_exists('max_age', $view) ? $view->max_age : 604800;
         $etag = method_exists($response, 'etag') ? $response->etag() : null;
