@@ -26,11 +26,26 @@ class Cache_Middleware_RFC7234
      */
     function process_response ($request, $response)
     {
+        // Request with If-None-Match header
+        if($request->method === 'GET' && array_key_exists('If-None-Match', $request->HEADERS)){
+            $matches = $request->HEADERS['If-None-Match'];
+            if(!is_array($matches)){
+                $stamp = [$matches];
+            }
+            foreach($matches as $stamp){                
+                if(strcmp($stamp, $response->headers['ETag']) === 0){
+                    // 304 (Not Modified) response
+                    $res = Pluf_HTTP_Response_NotModified();
+                    $res->headers = $response->headers;
+                    return $res;
+                }
+            }
+        }
+        
         $view = $request->view;
         $cacheable = array_key_exists('cacheable', $view) ? $view->cacheable : false;
         $revalidate = array_key_exists('revalidate', $view) ? $view->revalidate : false;
         $intermediate_cache = array_key_exists('revalidate', $view) ? $view->intermediate_cache : true;
-        // default max_age: 7 day
         $max_age = array_key_exists('max_age', $view) ? $view->max_age : 604800;
         $etag = method_exists($response, 'etag') ? $response->etag() : null;
         
@@ -61,5 +76,9 @@ class Cache_Middleware_RFC7234
             $response->headers['ETag'] = '"'.$etag.'"';
         
         return $response;
+    }
+    
+    function process_request($request){
+        return false;
     }
 }
