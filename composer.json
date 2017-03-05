@@ -19,16 +19,22 @@
 	"require" : {
 		"pluf/core" : "^2.0.2"
 	},
+	"require-dev" : {
+		"phpunit/phpunit" : "^5.7.14",
+		"phpunit/php-invoker" : "^1.1",
+		"phpunit/dbunit" : "^2.0",
+		"phpunit/phpunit-story" : "^1.0"
+	},
 	"include-path" : [
 		"src/"
 	],
 	"homepage" : "https://github.com/pluf/cache",
 	"support" : {
 		"email" : "info@pluf.ir",
-		"issues" : "https://github.com/pluf/spa/issues",
-		"forum" : "https://github.com/pluf/spa",
-		"wiki" : "https://github.com/pluf/spa/wiki",
-		"source" : "https://github.com/pluf/spa"
+		"issues" : "https://github.com/pluf/cache/issues",
+		"forum" : "https://github.com/pluf/cache",
+		"wiki" : "https://github.com/pluf/cache/wiki",
+		"source" : "https://github.com/pluf/cache"
 	},
 	"keywords" : [
 		"pluf",
