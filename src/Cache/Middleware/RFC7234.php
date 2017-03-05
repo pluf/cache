@@ -72,18 +72,20 @@ class Cache_Middleware_RFC7234
         $etag = method_exists($response, 'etag') ? $response->etag() : null;
         
         //TODO: hadi, 1395: check if values in Cache-Controll should be separated by , or ;
-        
+        // Reuseable? (no-store or not)
         if (! $cacheable) {
             $response->headers['Cache-Control'] = array_key_exists(
                     'Cache-Control', $response->headers) ? $response->headers['Cache-Control'] .
                      ', no-store' : 'no-store';
             return $response;
         }
+        // Should be revalidate every time? (no-cache)
         if($revalidate) {
             $response->headers['Cache-Control'] = array_key_exists(
                     'Cache-Control', $response->headers) ? $response->headers['Cache-Control'] .
                      ', no-cache' : 'no-cache';
         }
+        // Could be cached by intermediate caches? (public/private)
         if($intermediate_cache){
             $response->headers['Cache-Control'] = array_key_exists(
                     'Cache-Control', $response->headers) ? $response->headers['Cache-Control'] .
@@ -93,7 +95,9 @@ class Cache_Middleware_RFC7234
                     'Cache-Control', $response->headers) ? $response->headers['Cache-Control'] .
                     ', private' : 'private';
         }
+        // Maximum valid time (base second)
         $response->headers['Cache-Control'] = $response->headers['Cache-Control'] . ', max_age=' . $max_age;
+        // Compute ETag
         if($etag !== null)
             $response->headers['ETag'] = '"'.$etag.'"';
         
