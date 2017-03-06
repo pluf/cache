@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit colors="true">
+    <testsuites>
+        <testsuite name="pluf/cache">
+            <directory>./Cache_Api/</directory>
+            <directory>./Cache_Middleware/</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>
