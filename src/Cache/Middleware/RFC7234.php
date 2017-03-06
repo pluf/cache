@@ -47,7 +47,7 @@ class Cache_Middleware_RFC7234
     {
         // Request with If-None-Match header
         if($request->method === 'GET' && array_key_exists('If-None-Match', $request->HEADERS)){
-            $resETag = array_key_exists('ETag', $response->headers) ? $response->headers['ETag'] : null;
+            $resETag = method_exists($response, 'etag') ? $response->etag() : $response->hashCode();
             if($resETag === null)
                 return $response;
             $matches = $request->HEADERS['If-None-Match'];
@@ -55,9 +55,9 @@ class Cache_Middleware_RFC7234
                 $matches = array($matches);
             }
             foreach($matches as $stamp){                
-                if(strcmp($stamp, $response->headers['ETag']) === 0){
+                if(strcmp($stamp, $resETag) === 0){
                     // 304 (Not Modified) response
-                    $res = Pluf_HTTP_Response_NotModified();
+                    $res = new Cache_HTTP_Response_NotModified($request);
                     $res->headers = $response->headers;
                     return $res;
                 }
