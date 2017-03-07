@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Pluf Framework, a simple PHP Application Framework.
  * Copyright (C) 2010-2020 Phoinex Scholars Co. http://dpq.co.ir
@@ -19,9 +20,11 @@
 
 /**
  * Cache middleware
- * 
- * Add necessary directives to header of response to cache response in client side.
- * Added directives to header of response in this middleware are based on RFC-7234.
+ *
+ * Add necessary directives to header of response to cache response in client
+ * side.
+ * Added directives to header of response in this middleware are based on
+ * RFC-7234.
  *
  *
  * @author maso<mostafa.barmshory@dpq.co.ir>
@@ -45,33 +48,14 @@ class Cache_Middleware_RFC7234
      */
     function process_response ($request, $response)
     {
-        // Request with If-None-Match header
-        if($request->method === 'GET' && array_key_exists('If-None-Match', $request->HEADERS)){
-            $resETag = method_exists($response, 'etag') ? $response->etag() : $response->hashCode();
-            if($resETag === null)
-                return $response;
-            $matches = $request->HEADERS['If-None-Match'];
-            if(!is_array($matches)){
-                $matches = array($matches);
-            }
-            foreach($matches as $stamp){                
-                if(strcmp($stamp, $resETag) === 0){
-                    // 304 (Not Modified) response
-                    $res = new Cache_HTTP_Response_NotModified($request);
-                    $res->headers = $response->headers;
-                    return $res;
-                }
-            }
-        }
-        
         $view = $request->view;
         $cacheable = array_key_exists('cacheable', $view['ctrl']) ? $view['ctrl']['cacheable'] : false;
         $revalidate = array_key_exists('revalidate', $view['ctrl']) ? $view['ctrl']['revalidate'] : false;
-        $intermediate_cache = array_key_exists('intermediate_cache', $view['ctrl']) ? $view['ctrl']['intermediate_cache'] : true;
+        $intermediate_cache = array_key_exists('intermediate_cache', 
+                $view['ctrl']) ? $view['ctrl']['intermediate_cache'] : true;
         $max_age = array_key_exists('max_age', $view['ctrl']) ? $view['ctrl']['max_age'] : 604800;
-        $etag = method_exists($response, 'etag') ? $response->etag() : null;
+        $etag = method_exists($response, 'etag') ? $response->etag() : $response->hashCode();
         
-        //TODO: hadi, 1395: check if values in Cache-Controll should be separated by , or ;
         // Reuseable? (no-store or not)
         if (! $cacheable) {
             $response->headers['Cache-Control'] = array_key_exists(
@@ -80,31 +64,53 @@ class Cache_Middleware_RFC7234
             return $response;
         }
         // Should be revalidate every time? (no-cache)
-        if($revalidate) {
+        if ($revalidate) {
             $response->headers['Cache-Control'] = array_key_exists(
                     'Cache-Control', $response->headers) ? $response->headers['Cache-Control'] .
                      ', no-cache' : 'no-cache';
         }
         // Could be cached by intermediate caches? (public/private)
-        if($intermediate_cache){
+        if ($intermediate_cache) {
             $response->headers['Cache-Control'] = array_key_exists(
                     'Cache-Control', $response->headers) ? $response->headers['Cache-Control'] .
-                    ', public' : 'public';
-        }else{
+                     ', public' : 'public';
+        } else {
             $response->headers['Cache-Control'] = array_key_exists(
                     'Cache-Control', $response->headers) ? $response->headers['Cache-Control'] .
-                    ', private' : 'private';
+                     ', private' : 'private';
         }
         // Maximum valid time (base second)
-        $response->headers['Cache-Control'] = $response->headers['Cache-Control'] . ', max_age=' . $max_age;
+        $response->headers['Cache-Control'] = $response->headers['Cache-Control'] .
+                 ', max_age=' . $max_age;
         // Compute ETag
-        if($etag !== null)
-            $response->headers['ETag'] = '"'.$etag.'"';
+        if ($etag !== null)
+            $response->headers['ETag'] = '"' . $etag . '"';
+            
+            // Request with If-None-Match header
+        if ($request->method === 'GET' &&
+                 array_key_exists('If-None-Match', $request->HEADERS) &&
+                 $etag !== null) {
+            $matches = $request->HEADERS['If-None-Match'];
+            if (! is_array($matches)) {
+                $matches = array(
+                        $matches
+                );
+            }
+            foreach ($matches as $stamp) {
+                if (strcmp($stamp, $etag) === 0) {
+                    // 304 (Not Modified) response
+                    $res = new Cache_HTTP_Response_NotModified($request);
+                    $res->headers = $response->headers;
+                    return $res;
+                }
+            }
+        }
         
         return $response;
     }
-    
-    function process_request($request){
+
+    function process_request ($request)
+    {
         return false;
     }
 }
