@@ -83,7 +83,7 @@ class Cache_Middleware_RFC7234
         $response->headers['Cache-Control'] = $response->headers['Cache-Control'] .
                  ', max_age=' . $max_age;
         // Compute ETag
-        if ($etag !== null)
+        if ($etag)
             $response->headers['ETag'] = '"' . $etag . '"';
             
             // Request with If-None-Match header
