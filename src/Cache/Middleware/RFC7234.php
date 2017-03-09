@@ -81,16 +81,14 @@ class Cache_Middleware_RFC7234
         }
         // Maximum valid time (base second)
         $response->headers['Cache-Control'] = $response->headers['Cache-Control'] .
-                 ', max_age=' . $max_age;
+                 ', max-age=' . $max_age;
         // Compute ETag
-        if ($etag){
-//             $response->headers['ETag'] = '"' . $etag . '"';
+        if ($etag)
             $response->headers['ETag'] = $etag;
-        }
+            
             // Request with If-None-Match header
-        if ($request->method === 'GET' &&
-                 array_key_exists('If-None-Match', $request->HEADERS) &&
-                 $etag !== null) {
+        if (($request->method === 'GET' || $request->method === 'HEAD') &&
+                 array_key_exists('If-None-Match', $request->HEADERS) && $etag) {
             $matches = $request->HEADERS['If-None-Match'];
             if (! is_array($matches)) {
                 $matches = array(
