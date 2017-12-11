@@ -6,4 +6,14 @@
             <directory>./Cache_Middleware/</directory>
         </testsuite>
     </testsuites>
+
+	<!-- Code coverage -->
+	<filter>
+		<whitelist addUncoveredFilesFromWhitelist="true">
+			<directory suffix=".php">../src</directory>
+		</whitelist>
+	</filter>
+	<logging>
+		<log type="coverage-clover" target="./clover.xml" />
+	</logging>
 </phpunit>
