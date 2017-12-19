@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1513716454">
+  <project timestamp="1513716454">
+    <file name="/home/maso/git/pluf/cache/src/Cache/HTTP/Response/NotModified.php">
+      <class name="Cache_HTTP_Response_NotModified" namespace="global" fullPackage="Cache.HTTP.Response">
+        <metrics complexity="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="3" coveredstatements="3" elements="4" coveredelements="4"/>
+      </class>
+      <line num="26" type="method" name="__construct" complexity="1" crap="1" count="1"/>
+      <line num="28" type="stmt" count="1"/>
+      <line num="29" type="stmt" count="1"/>
+      <line num="30" type="stmt" count="1"/>
+      <metrics loc="30" ncloc="9" classes="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="3" coveredstatements="3" elements="4" coveredelements="4"/>
+    </file>
+    <file name="/home/maso/git/pluf/cache/src/Cache/Middleware/RFC7234.php">
+      <class name="Cache_Middleware_RFC7234" namespace="global" fullPackage="Cache.Middleware">
+        <metrics complexity="22" methods="2" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="39" coveredstatements="38" elements="41" coveredelements="39"/>
+      </class>
+      <line num="49" type="method" name="process_response" complexity="21" crap="21" count="7"/>
+      <line num="51" type="stmt" count="7"/>
+      <line num="52" type="stmt" count="7"/>
+      <line num="53" type="stmt" count="7"/>
+      <line num="54" type="stmt" count="7"/>
+      <line num="55" type="stmt" count="7"/>
+      <line num="56" type="stmt" count="7"/>
+      <line num="57" type="stmt" count="7"/>
+      <line num="60" type="stmt" count="7"/>
+      <line num="61" type="stmt" count="2"/>
+      <line num="62" type="stmt" count="2"/>
+      <line num="63" type="stmt" count="2"/>
+      <line num="64" type="stmt" count="2"/>
+      <line num="67" type="stmt" count="5"/>
+      <line num="68" type="stmt" count="1"/>
+      <line num="69" type="stmt" count="1"/>
+      <line num="70" type="stmt" count="1"/>
+      <line num="73" type="stmt" count="5"/>
+      <line num="74" type="stmt" count="2"/>
+      <line num="75" type="stmt" count="2"/>
+      <line num="76" type="stmt" count="2"/>
+      <line num="78" type="stmt" count="3"/>
+      <line num="79" type="stmt" count="3"/>
+      <line num="80" type="stmt" count="3"/>
+      <line num="83" type="stmt" count="5"/>
+      <line num="84" type="stmt" count="5"/>
+      <line num="86" type="stmt" count="5"/>
+      <line num="87" type="stmt" count="5"/>
+      <line num="90" type="stmt" count="5"/>
+      <line num="91" type="stmt" count="5"/>
+      <line num="92" type="stmt" count="1"/>
+      <line num="93" type="stmt" count="1"/>
+      <line num="95" type="stmt" count="1"/>
+      <line num="98" type="stmt" count="1"/>
+      <line num="99" type="stmt" count="1"/>
+      <line num="101" type="stmt" count="1"/>
+      <line num="102" type="stmt" count="1"/>
+      <line num="103" type="stmt" count="1"/>
+      <line num="108" type="stmt" count="4"/>
+      <line num="111" type="method" name="process_request" complexity="1" crap="2" count="0"/>
+      <line num="113" type="stmt" count="0"/>
+      <metrics loc="115" ncloc="59" classes="1" methods="2" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="39" coveredstatements="38" elements="41" coveredelements="39"/>
+    </file>
+    <file name="/home/maso/git/pluf/cache/src/Cache/relations.php">
+      <line num="19" type="stmt" count="0"/>
+      <metrics loc="18" ncloc="1" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+    </file>
+    <file name="/home/maso/git/pluf/cache/src/Cache/urls.php">
+      <line num="19" type="stmt" count="0"/>
+      <line num="21" type="stmt" count="0"/>
+      <metrics loc="21" ncloc="4" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="2" coveredstatements="0" elements="2" coveredelements="0"/>
+    </file>
+    <metrics files="4" loc="184" ncloc="73" classes="2" methods="3" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="44" coveredstatements="41" elements="47" coveredelements="43"/>
+  </project>
+</coverage>
