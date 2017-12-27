@@ -30,7 +30,7 @@
  * @author maso<mostafa.barmshory@dpq.co.ir>
  * @author hadi<mohammad.hadi.mansouri@dpq.co.ir>
  */
-class Cache_Middleware_RFC7234
+class Cache_Middleware_RFC7234 implements Pluf_Middleware
 {
 
     /**
@@ -40,59 +40,45 @@ class Cache_Middleware_RFC7234
      *
      * @see https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/http-caching
      *
-     * @param Pluf_HTTP_Request $request
-     *            The request
-     * @param Pluf_HTTP_Response $resonse
-     *            The response
-     * @return Pluf_HTTP_Response The response
+     * {@inheritdoc}
+     * @see Pluf_Middleware::process_response()
      */
-    function process_response ($request, $response)
+    public function process_response($request, $response)
     {
         $view = $request->view;
         $cacheable = array_key_exists('cacheable', $view['ctrl']) ? $view['ctrl']['cacheable'] : false;
         $revalidate = array_key_exists('revalidate', $view['ctrl']) ? $view['ctrl']['revalidate'] : false;
-        $intermediate_cache = array_key_exists('intermediate_cache', 
-                $view['ctrl']) ? $view['ctrl']['intermediate_cache'] : true;
+        $intermediate_cache = array_key_exists('intermediate_cache', $view['ctrl']) ? $view['ctrl']['intermediate_cache'] : true;
         $max_age = array_key_exists('max_age', $view['ctrl']) ? $view['ctrl']['max_age'] : 604800;
         $etag = method_exists($response, 'etag') ? $response->etag() : $response->hashCode();
         
         // Reuseable? (no-store or not)
         if (! $cacheable) {
-            $response->headers['Cache-Control'] = array_key_exists(
-                    'Cache-Control', $response->headers) ? $response->headers['Cache-Control'] .
-                     ', no-store' : 'no-store';
+            $response->headers['Cache-Control'] = array_key_exists('Cache-Control', $response->headers) ? $response->headers['Cache-Control'] . ', no-store' : 'no-store';
             return $response;
         }
         // Should be revalidate every time? (no-cache)
         if ($revalidate) {
-            $response->headers['Cache-Control'] = array_key_exists(
-                    'Cache-Control', $response->headers) ? $response->headers['Cache-Control'] .
-                     ', no-cache' : 'no-cache';
+            $response->headers['Cache-Control'] = array_key_exists('Cache-Control', $response->headers) ? $response->headers['Cache-Control'] . ', no-cache' : 'no-cache';
         }
         // Could be cached by intermediate caches? (public/private)
         if ($intermediate_cache) {
-            $response->headers['Cache-Control'] = array_key_exists(
-                    'Cache-Control', $response->headers) ? $response->headers['Cache-Control'] .
-                     ', public' : 'public';
+            $response->headers['Cache-Control'] = array_key_exists('Cache-Control', $response->headers) ? $response->headers['Cache-Control'] . ', public' : 'public';
         } else {
-            $response->headers['Cache-Control'] = array_key_exists(
-                    'Cache-Control', $response->headers) ? $response->headers['Cache-Control'] .
-                     ', private' : 'private';
+            $response->headers['Cache-Control'] = array_key_exists('Cache-Control', $response->headers) ? $response->headers['Cache-Control'] . ', private' : 'private';
         }
         // Maximum valid time (base second)
-        $response->headers['Cache-Control'] = $response->headers['Cache-Control'] .
-                 ', max-age=' . $max_age;
+        $response->headers['Cache-Control'] = $response->headers['Cache-Control'] . ', max-age=' . $max_age;
         // Compute ETag
         if ($etag)
             $response->headers['ETag'] = $etag;
-            
-            // Request with If-None-Match header
-        if (($request->method === 'GET' || $request->method === 'HEAD') &&
-                 array_key_exists('If-None-Match', $request->HEADERS) && $etag) {
+        
+        // Request with If-None-Match header
+        if (($request->method === 'GET' || $request->method === 'HEAD') && array_key_exists('If-None-Match', $request->HEADERS) && $etag) {
             $matches = $request->HEADERS['If-None-Match'];
             if (! is_array($matches)) {
                 $matches = array(
-                        $matches
+                    $matches
                 );
             }
             foreach ($matches as $stamp) {
@@ -108,7 +94,12 @@ class Cache_Middleware_RFC7234
         return $response;
     }
 
-    function process_request ($request)
+    /**
+     *
+     * {@inheritdoc}
+     * @see Pluf_Middleware::process_request()
+     */
+    public function process_request(&$request)
     {
         return false;
     }
