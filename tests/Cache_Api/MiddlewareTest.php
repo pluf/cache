@@ -27,6 +27,14 @@ require_once 'Pluf.php';
  */
 class Cache_Api_MiddlewareTest extends TestCase
 {
+    /**
+     * @before
+     */
+    public function setUpTest()
+    {
+        Pluf::start(__DIR__ . '/../conf/config.php');
+    }
+
 
     /**
      * Can create new instance

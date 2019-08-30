@@ -44,6 +44,14 @@ class CacheTestHttpResponse extends Pluf_HTTP_Response
  */
 class Cache_Api_ResponseTest extends TestCase
 {
+        /**
+         * @before
+         */
+        public function setUpTest()
+        {
+            Pluf::start(__DIR__ . '/../conf/config.php');
+        }
+    
 
     /**
      * Check if there is no cache config
