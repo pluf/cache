@@ -1,7 +1,8 @@
 <?php
+
 /*
  * This file is part of Pluf Framework, a simple PHP Application Framework.
- * Copyright (C) 2010-2020 Phoinex Scholars Co. (http://dpq.co.ir)
+ * Copyright (C) 2010-2020 Phoinex Scholars Co. http://dpq.co.ir
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,6 +17,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-return array(
-        
-);
+namespace Pluf\Cache\HTTP\Response;
+
+use Pluf_HTTP_Response;
+
+class NotModified extends Pluf_HTTP_Response
+{
+
+    function __construct($request)
+    {
+        parent::__construct();
+        $this->status_code = 304;
+    }
+}

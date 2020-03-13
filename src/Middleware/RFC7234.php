@@ -17,6 +17,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
+namespace Pluf\Cache\Middleware;
+
+use Pluf\Cache\HTTP;
+use Pluf_Middleware;
 
 /**
  * Cache middleware
@@ -30,7 +34,7 @@
  * @author maso<mostafa.barmshory@dpq.co.ir>
  * @author hadi<mohammad.hadi.mansouri@dpq.co.ir>
  */
-class Cache_Middleware_RFC7234 implements Pluf_Middleware
+class RFC7234 implements Pluf_Middleware
 {
 
     /**
@@ -51,7 +55,7 @@ class Cache_Middleware_RFC7234 implements Pluf_Middleware
         $intermediate_cache = array_key_exists('intermediate_cache', $view['ctrl']) ? $view['ctrl']['intermediate_cache'] : true;
         $max_age = array_key_exists('max_age', $view['ctrl']) ? $view['ctrl']['max_age'] : 604800;
         $etag = method_exists($response, 'etag') ? $response->etag() : $response->hashCode();
-        
+
         // Reuseable? (no-store or not)
         if (! $cacheable) {
             $response->headers['Cache-Control'] = array_key_exists('Cache-Control', $response->headers) ? $response->headers['Cache-Control'] . ', no-store' : 'no-store';
@@ -72,7 +76,7 @@ class Cache_Middleware_RFC7234 implements Pluf_Middleware
         // Compute ETag
         if ($etag)
             $response->headers['ETag'] = $etag;
-        
+
         // Request with If-None-Match header
         if (($request->method === 'GET' || $request->method === 'HEAD') && array_key_exists('If-None-Match', $request->HEADERS) && $etag) {
             $matches = $request->HEADERS['If-None-Match'];
@@ -84,13 +88,13 @@ class Cache_Middleware_RFC7234 implements Pluf_Middleware
             foreach ($matches as $stamp) {
                 if (strcmp($stamp, $etag) === 0) {
                     // 304 (Not Modified) response
-                    $res = new Cache_HTTP_Response_NotModified($request);
+                    $res = new HTTP\Response\NotModified($request);
                     $res->headers = $response->headers;
                     return $res;
                 }
             }
         }
-        
+
         return $response;
     }
 

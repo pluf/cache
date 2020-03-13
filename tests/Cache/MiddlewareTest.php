@@ -16,15 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-use PHPUnit\Framework\TestCase;
-require_once 'Pluf.php';
+namespace Pluf\Test\Cache;
 
-/**
- * Check cache middleware functionality
- * 
- * @author pluf.ir<info@pluf.ir>
- *
- */
+use Pluf\Cache;
+use Pluf\Test\TestCase;
+use Pluf;
+
 class Cache_Api_MiddlewareTest extends TestCase
 {
     /**
@@ -43,7 +40,7 @@ class Cache_Api_MiddlewareTest extends TestCase
      */
     public function instance ()
     {
-        $middleware = new Cache_Middleware_RFC7234();
+        $middleware = new Cache\Middleware\RFC7234();
         $this->assertTrue(isset($middleware),
                 'Impossible to create instance of Cache_Middleware_RFC7234');
     }
@@ -55,7 +52,7 @@ class Cache_Api_MiddlewareTest extends TestCase
      */
     public function methods ()
     {
-        $middleware = new Cache_Middleware_RFC7234();
+        $middleware = new Cache\Middleware\RFC7234();
         $method_names = array(
                 'process_request',
                 'process_response'
