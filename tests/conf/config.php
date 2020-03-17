@@ -18,7 +18,7 @@ $cfg['tmp_folder'] = '/tmp';
 $cfg['upload_path'] = '/tmp';
 $cfg['middleware_classes'] = array(
     '\Pluf\Cache\Middleware\RFC7234',
-    'Pluf_Middleware_Session'
+    '\Pluf\Middleware\Session'
 );
 $cfg['secret_key'] = '5a8d7e0f2aad8bdab8f6eef725412850';
 
